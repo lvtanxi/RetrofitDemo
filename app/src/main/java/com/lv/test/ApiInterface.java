@@ -21,6 +21,8 @@ public interface ApiInterface {
     Observable<List<Data>> testUser();
     @POST("Xx")
     Observable<Void> testUserVoid();
+    @POST("Xx")
+    Observable<String> testUserString();
     @GET("Xx")
     Call<TestBean> testUser2();
 }

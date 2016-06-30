@@ -2,6 +2,11 @@ package com.lv.test;
 
 
 import com.lv.test.custom.CustomConverterFactory;
+import com.lv.test.custom.StringConverterFactory;
+import com.lv.test.in.CacheInterceptor;
+import com.lv.test.in.LoggingInterceptor;
+import com.lv.test.in.ProtocolInterceptor;
+import com.lv.test.in.QueryParameterInterceptor;
 import com.lv.test.in.TokenInterceptor;
 
 import java.io.File;
@@ -33,7 +38,7 @@ public class ResetClient {
     private static Retrofit sRetrofit;
     private static ApiInterface sApiInterface;
 
-    public static Retrofit createRetrofit() {
+    private static Retrofit createRetrofit() {
         if (null == sRetrofit) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
@@ -42,10 +47,15 @@ public class ResetClient {
                 File directory = new File(cacheFile, "HttpResponseCache");
                 builder.cache(new Cache(directory, HTTP_RESPONSE_DISK_CACHE_MAX_SIZE));
             }
-            builder.interceptors().add(new TokenInterceptor());
+            builder.addInterceptor(new CacheInterceptor())
+                    .addNetworkInterceptor(new QueryParameterInterceptor())
+                    .addNetworkInterceptor(new TokenInterceptor())
+                    .addInterceptor(new ProtocolInterceptor())
+                    .addInterceptor(new LoggingInterceptor());
             addHttps(builder);
             sRetrofit = new Retrofit.Builder()
                     .baseUrl("http://10.13.2.166:8080/TestWeb/")
+                    .addConverterFactory(StringConverterFactory.create())
                     .addConverterFactory(CustomConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .client(builder.build())
@@ -53,13 +63,17 @@ public class ResetClient {
         }
         return sRetrofit;
     }
-    private static void addHttps(OkHttpClient.Builder builder){
+
+
+
+    private static void addHttps(OkHttpClient.Builder builder) {
         try {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, new TrustManager[]{new X509TrustManager() {
                 @Override
                 public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
                 }
+
                 @Override
                 public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
                 }
@@ -85,12 +99,12 @@ public class ResetClient {
 
     public static ApiInterface getClient() {
         if (sApiInterface == null)
-            sApiInterface =createService(ApiInterface.class);
+            sApiInterface = createService(ApiInterface.class);
         return sApiInterface;
     }
 
-    private static < T > T createService( Class<T> clz ){
-        return(createRetrofit().create( clz ) );
+    private static <T> T createService(Class<T> clz) {
+        return (createRetrofit().create(clz));
     }
 
 }
