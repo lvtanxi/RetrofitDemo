@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.lv.test.BuildConfig;
 import com.lv.test.MainApplication;
 
 import org.json.JSONException;
@@ -54,20 +53,15 @@ public  class ProtocolInterceptor implements Interceptor {
         }
 
         int code = json.optInt("code");
-        String message = json.optString("message");
-        String errorMessage = json.optString("errorMessage");
+        String message = json.optString("message","");
 
         switch (code) {
             case 100:
                 return json.optString("data");
             case 101:
             case 102:
-
             default:
-                if ((message == null || message.equals("null")) && BuildConfig.DEBUG) {
-                    message = errorMessage;
-                }
-                throw new IOException(message);
+                throw new RuntimeException(message);
         }
     }
 }

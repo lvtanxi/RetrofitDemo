@@ -4,8 +4,6 @@ package com.lv.test;
 import com.lv.test.custom.CustomConverterFactory;
 import com.lv.test.custom.StringConverterFactory;
 import com.lv.test.in.CacheInterceptor;
-import com.lv.test.in.LoggingInterceptor;
-import com.lv.test.in.ProtocolInterceptor;
 import com.lv.test.in.QueryParameterInterceptor;
 import com.lv.test.in.TokenInterceptor;
 
@@ -37,7 +35,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
  * Time: 09:23
  * Description:
  */
-public class ResetClient {
+public class RetrofitClient {
     private static final int HTTP_RESPONSE_DISK_CACHE_MAX_SIZE = 10 * 1024 * 1024;
     private static Retrofit sRetrofit;
     private static ApiInterface sApiInterface;
@@ -54,8 +52,8 @@ public class ResetClient {
             builder.addInterceptor(new CacheInterceptor())
                     .addNetworkInterceptor(new QueryParameterInterceptor())
                     .addNetworkInterceptor(new TokenInterceptor())
-                    .addInterceptor(new ProtocolInterceptor())
-                    .addInterceptor(new LoggingInterceptor())
+                   //.addInterceptor(new ProtocolInterceptor())
+                   // .addInterceptor(new LoggingInterceptor())
                     .connectTimeout(15, TimeUnit.SECONDS)
                     .readTimeout(20, TimeUnit.SECONDS)
                     .writeTimeout(20, TimeUnit.SECONDS)
@@ -70,6 +68,7 @@ public class ResetClient {
                     .baseUrl("http://10.13.2.166:8080/TestWeb/")
                     .addConverterFactory(StringConverterFactory.create())
                     .addConverterFactory(CustomConverterFactory.create())
+                   // .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .client(builder.build())
                     .build();
@@ -109,7 +108,7 @@ public class ResetClient {
         }
     }
 
-    public static ApiInterface getClient() {
+    public static ApiInterface getApiInterface() {
         if (sApiInterface == null)
             sApiInterface = createService(ApiInterface.class);
         return sApiInterface;

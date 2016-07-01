@@ -6,6 +6,7 @@ import com.lv.test.bean.TestBean;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import rx.Observable;
@@ -25,4 +26,12 @@ public interface ApiInterface {
     Observable<String> testUserString();
     @GET("Xx")
     Call<TestBean> testUser2();
+
+
+
+    @POST("Xx")
+    Observable<TestBean> testUserXX(@Body String TEX);
+
+
+
 }

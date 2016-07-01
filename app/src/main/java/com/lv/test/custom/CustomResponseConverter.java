@@ -27,9 +27,9 @@ class CustomResponseConverter<T> implements Converter<ResponseBody, T> {
         try {
             String body = responseBody.string();
             JSONObject json = new JSONObject(body);
-            int code = json.optInt("code");
+            int code = json.optInt("code",0);
             if (code != 100)
-                throw new RuntimeException(json.optString("msg"));
+                throw new RuntimeException(json.optString("message",""));
             if (json.has(name)){
                 String jsonStr = json.getString(name);
                 if(null==jsonStr||jsonStr.length()==2)

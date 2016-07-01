@@ -19,7 +19,7 @@ public abstract class LoadingSubscriber<T> extends Subscriber<T> {
     }
 
     public LoadingSubscriber(WidgetInterface widgetInterface, boolean showLoadingView) {
-        this(widgetInterface, showLoadingView, false);
+        this(widgetInterface, showLoadingView, true);
     }
 
     public LoadingSubscriber(WidgetInterface widgetInterface, boolean showLoadingView, boolean showToast) {

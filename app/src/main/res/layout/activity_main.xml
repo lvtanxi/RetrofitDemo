@@ -24,4 +24,9 @@
         android:layout_width="match_parent"
         android:text="String"
         android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="match_parent"
+        android:text="ZIP"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

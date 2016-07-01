@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.lv.test.bean.Data;
+import com.lv.test.bean.TestBean;
 import com.lv.test.net.LoadingSubscriber;
 import com.lv.test.net.WidgetInterface;
 
@@ -21,13 +22,15 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, WidgetInterface {
     private CompositeSubscription mCompositeSubscription;
     private int index = 0;
-    private   SpannableString spannableString;
+    private SpannableString spannableString;
     private RelativeSizeSpan mRelativeSizeSpan;
 
     @Override
@@ -35,16 +38,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        index=1;
+        index = 1;
     }
 
     private void initView() {
-        index=2;
+        index = 2;
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(this);
         Button button2 = (Button) findViewById(R.id.button2);
-            button2.setOnClickListener(this);
+        button2.setOnClickListener(this);
         findViewById(R.id.button3).setOnClickListener(this);
+        findViewById(R.id.button4).setOnClickListener(this);
     }
 
     @Override
@@ -59,11 +63,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.button3:
                 httpTest3();
                 break;
+            case R.id.button4:
+                httpTest4();
+                break;
         }
     }
 
+    private void httpTest4() {
+        Observable.zip(RetrofitClient.getApiInterface().testUser(), RetrofitClient.getApiInterface().testUserXX("sadf"), new Func2<List<Data>, TestBean, String>() {
+
+            @Override
+            public String call(List<Data> datas, TestBean testBean) {
+                DLog.d((null == datas) + ".." + (testBean == null));
+                return null;
+            }
+        }).subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        DLog.d(">>>>>>>>>>>>");
+                    }
+                });
+    }
+
     private void httpTest3() {
-        addSubscription(ResetClient.getClient().testUserString(), new LoadingSubscriber<String>(this) {
+        addSubscription(RetrofitClient.getApiInterface().testUserString(), new LoadingSubscriber<String>(this) {
             @Override
             protected void onSuccess(String s) {
                 DLog.d(s);
@@ -109,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         };
     }*/
     private void httpTest() {
-        addSubscription(ResetClient.getClient().testUser(), new LoadingSubscriber<List<Data>>(this) {
+        addSubscription(RetrofitClient.getApiInterface().testUser(), new LoadingSubscriber<List<Data>>(this) {
             @Override
             protected void onSuccess(List<Data> datas) {
             }
@@ -126,12 +152,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void httpTest2() {
-        addSubscription(ResetClient.getClient().testUser(),
+        addSubscription(RetrofitClient.getApiInterface().testUser(),
                 new LoadingSubscriber<List<Data>>(this) {
                     @Override
                     protected void onSuccess(List<Data> datas) {
                         DLog.d("MainActivity", "datas:" + datas);
-                        Toast.makeText(MainActivity.this, datas.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -153,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void showFailToast(@NonNull String message) {
-
+        DLog.d(message);
     }
 
     @Override
