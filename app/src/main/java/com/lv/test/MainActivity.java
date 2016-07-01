@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .subscribe(subscriber);
         addSubscription(subscription);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

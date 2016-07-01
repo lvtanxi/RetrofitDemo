@@ -10,11 +10,14 @@ import com.lv.test.in.QueryParameterInterceptor;
 import com.lv.test.in.TokenInterceptor;
 
 import java.io.File;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -23,6 +26,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Cache;
+import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -51,8 +55,17 @@ public class ResetClient {
                     .addNetworkInterceptor(new QueryParameterInterceptor())
                     .addNetworkInterceptor(new TokenInterceptor())
                     .addInterceptor(new ProtocolInterceptor())
-                    .addInterceptor(new LoggingInterceptor());
+                    .addInterceptor(new LoggingInterceptor())
+                    .connectTimeout(15, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    .writeTimeout(20, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(true);
             addHttps(builder);
+
+            CookieManager cookieManager = new CookieManager();
+            cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+            builder.cookieJar(new JavaNetCookieJar(cookieManager));
+
             sRetrofit = new Retrofit.Builder()
                     .baseUrl("http://10.13.2.166:8080/TestWeb/")
                     .addConverterFactory(StringConverterFactory.create())
@@ -63,7 +76,6 @@ public class ResetClient {
         }
         return sRetrofit;
     }
-
 
 
     private static void addHttps(OkHttpClient.Builder builder) {
