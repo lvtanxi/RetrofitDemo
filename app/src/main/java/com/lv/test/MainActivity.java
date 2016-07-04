@@ -16,13 +16,16 @@ import com.lv.test.bean.TestBean;
 import com.lv.test.net.LoadingSubscriber;
 import com.lv.test.net.WidgetInterface;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button2.setOnClickListener(this);
         findViewById(R.id.button3).setOnClickListener(this);
         findViewById(R.id.button4).setOnClickListener(this);
+        findViewById(R.id.button5).setOnClickListener(this);
     }
 
     @Override
@@ -66,24 +70,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.button4:
                 httpTest4();
                 break;
+            case R.id.button5:
+                httpTest5();
+                break;
         }
     }
 
-    private void httpTest4() {
-        Observable.zip(RetrofitClient.getApiInterface().testUser(), RetrofitClient.getApiInterface().testUserXX("sadf"), new Func2<List<Data>, TestBean, String>() {
-
+    private void httpTest5() {
+        Map<String, Object> objectMap = new HashMap<>();
+        objectMap.put("keys", new String[]{"1", "2"});
+        addSubscription(RetrofitClient.getApiInterface().testUserArray(objectMap), new LoadingSubscriber<TestBean>(this) {
             @Override
-            public String call(List<Data> datas, TestBean testBean) {
+            protected void onSuccess(TestBean testBean) {
+                DLog.d(">>>>>>>>>>>>" + testBean);
+            }
+        });
+    }
+
+    private void httpTest4() {
+        Observable.zip(RetrofitClient.getApiInterface().testUser(), RetrofitClient.getApiInterface().testUserXX("sadf"), new Func2<List<Data>, TestBean, TestBean>() {
+            @Override
+            public TestBean call(List<Data> datas, TestBean testBean) {
                 DLog.d((null == datas) + ".." + (testBean == null));
                 return null;
+            }
+        }).onErrorReturn(new Func1<Throwable, TestBean>() {
+            @Override
+            public TestBean call(Throwable throwable) {
+                DLog.d(throwable.getMessage());
+                return null;
+            }
+        }).doOnNext(new Action1<TestBean>() {
+            @Override
+            public void call(TestBean testBean) {
+                DLog.d(Thread.currentThread().getName());
             }
         }).subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
+                .subscribe(new LoadingSubscriber<TestBean>(this) {
                     @Override
-                    public void call(String s) {
-                        DLog.d(">>>>>>>>>>>>");
+                    protected void onSuccess(TestBean testBean) {
+                        DLog.d(">>>>>>>>>>>>" + (testBean == null));
                     }
                 });
     }
@@ -173,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void showSuccessToast(@NonNull String message) {
-
+        DLog.d(message);
     }
 
     @Override

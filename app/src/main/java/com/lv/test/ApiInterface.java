@@ -4,6 +4,7 @@ import com.lv.test.bean.Data;
 import com.lv.test.bean.TestBean;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -31,6 +32,9 @@ public interface ApiInterface {
 
     @POST("Xx")
     Observable<TestBean> testUserXX(@Body String TEX);
+
+    @POST("Xx")
+    Observable<TestBean> testUserArray(@Body Map<String,Object> map);
 
 
 

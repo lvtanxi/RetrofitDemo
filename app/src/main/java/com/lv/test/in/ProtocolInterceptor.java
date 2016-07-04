@@ -49,7 +49,7 @@ public  class ProtocolInterceptor implements Interceptor {
             json = new JSONObject(body);
         } catch (JSONException e) {
             e.printStackTrace();
-            throw new IOException("数据解析错误，请稍后重试");
+            throw new IOException("数据解析错误,请稍后重试!");
         }
 
         int code = json.optInt("code");

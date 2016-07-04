@@ -2,6 +2,7 @@ package com.lv.test.custom;
 
 import com.google.gson.TypeAdapter;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -37,9 +38,9 @@ class CustomResponseConverter<T> implements Converter<ResponseBody, T> {
                 return adapter.fromJson(jsonStr);
             }
             return null;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             throw new RuntimeException("程序异常!请稍候再试!");
-        } finally {
+        }  finally {
             responseBody.close();
         }
     }
