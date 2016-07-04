@@ -1,6 +1,8 @@
-package com.lv.test;
+package com.lv.test.client;
 
 
+import com.lv.test.ApiInterface;
+import com.lv.test.MainApplication;
 import com.lv.test.custom.CustomConverterFactory;
 import com.lv.test.custom.StringConverterFactory;
 import com.lv.test.in.CacheInterceptor;

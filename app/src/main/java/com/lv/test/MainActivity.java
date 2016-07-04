@@ -13,7 +13,10 @@ import android.widget.Toast;
 
 import com.lv.test.bean.Data;
 import com.lv.test.bean.TestBean;
+import com.lv.test.client.Retrofit2Client;
+import com.lv.test.client.RetrofitClient;
 import com.lv.test.net.LoadingSubscriber;
+import com.lv.test.net.RxSchedulers;
 import com.lv.test.net.WidgetInterface;
 
 import java.util.HashMap;
@@ -23,11 +26,9 @@ import java.util.Map;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, WidgetInterface {
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void httpTest4() {
-        Observable.zip(RetrofitClient.getApiInterface().testUser(), RetrofitClient.getApiInterface().testUserXX("sadf"), new Func2<List<Data>, TestBean, TestBean>() {
+        Observable.zip(Retrofit2Client.getInstance().mApiInterface.testUser(), Retrofit2Client.getInstance().mApiInterface.testUserXX("sadf"), new Func2<List<Data>, TestBean, TestBean>() {
             @Override
             public TestBean call(List<Data> datas, TestBean testBean) {
                 DLog.d((null == datas) + ".." + (testBean == null));
@@ -105,9 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void call(TestBean testBean) {
                 DLog.d(Thread.currentThread().getName());
             }
-        }).subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        }).compose(RxSchedulers.<TestBean>io_main())
                 .subscribe(new LoadingSubscriber<TestBean>(this) {
                     @Override
                     protected void onSuccess(TestBean testBean) {
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void httpTest3() {
-        addSubscription(RetrofitClient.getApiInterface().testUserString(), new LoadingSubscriber<String>(this) {
+        addSubscription(Retrofit2Client.getInstance().mApiInterface.testUserString(), new LoadingSubscriber<String>(this) {
             @Override
             protected void onSuccess(String s) {
                 DLog.d(s);
@@ -132,9 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected <T> void addSubscription(Observable<T> observable, Subscriber<T> subscriber) {
-        Subscription subscription = observable.subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        Subscription subscription = observable.compose(RxSchedulers.<T>io_main())
                 .subscribe(subscriber);
         addSubscription(subscription);
     }
