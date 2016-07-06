@@ -15,8 +15,8 @@ import com.lv.test.bean.Data;
 import com.lv.test.bean.TestBean;
 import com.lv.test.client.Retrofit2Client;
 import com.lv.test.client.RetrofitClient;
+import com.lv.test.helper.RxSchedulers;
 import com.lv.test.net.LoadingSubscriber;
-import com.lv.test.net.RxSchedulers;
 import com.lv.test.net.WidgetInterface;
 
 import java.util.HashMap;

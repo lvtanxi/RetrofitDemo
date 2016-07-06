@@ -1,4 +1,4 @@
-package com.lv.test.net;
+package com.lv.test.helper;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -6,6 +6,7 @@ import rx.schedulers.Schedulers;
 
 
 public class RxSchedulers {
+
     public static <T> Observable.Transformer<T, T> io_main() {
         return new Observable.Transformer<T, T>() {
             @Override
@@ -14,4 +15,5 @@ public class RxSchedulers {
             }
         };
     }
+
 }
