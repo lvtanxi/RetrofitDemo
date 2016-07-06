@@ -24,12 +24,7 @@ public class RxResultHelper {
                             }
                         }
 
-                ).onErrorReturn(new Func1<Throwable, T>() {
-                    @Override
-                    public T call(Throwable throwable) {
-                        throw new IllegalArgumentException(throwable.getMessage());
-                    }
-                });
+                );
             }
         };
     }
