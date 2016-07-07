@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.lv.test.bean.Data;
 import com.lv.test.client.Retrofit3Client;
+import com.lv.test.helper.RestResult;
 import com.lv.test.helper.RxResultHelper;
 import com.lv.test.helper.RxSchedulers;
 import com.lv.test.net.LoadingSubscriber;
@@ -15,6 +16,7 @@ import com.lv.test.net.WidgetInterface;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Func1;
 import rx.functions.Func2;
 
 /**
@@ -89,6 +91,49 @@ public class ResultHelperAct extends AppCompatActivity implements WidgetInterfac
                 });
     }
 
+
+    public void voidData(View view) {
+        Retrofit3Client
+                .getInstance()
+                .mApiInterface
+                .dataVoid()
+                .compose(RxResultHelper.<Void>handleResult())
+                .compose(RxSchedulers.<Void>io_main())
+                .subscribe(new LoadingSubscriber<Void>(this) {
+                    @Override
+                    protected void onSuccess(Void aVoid) {
+                        DLog.d(">>>>>>>>");
+                    }
+                });
+    }
+
+    public void concatMap(View view) {
+        Retrofit3Client
+                .getInstance()
+                .mApiInterface
+                .dataOne()
+                .compose(RxResultHelper.<Data>handleResult())
+                .concatMap(new Func1<Data, Observable<RestResult<List<Data>>>>() {
+                    @Override
+                    public Observable<RestResult<List<Data>>> call(Data data) {
+                        DLog.d(data);
+                        return Retrofit3Client.getInstance().mApiInterface.listData();
+                    }
+                })
+                .compose(RxResultHelper.<List<Data>>handleResult())
+                .compose(RxSchedulers.<List<Data>>io_main())
+                .subscribe(new LoadingSubscriber<List<Data>>(this) {
+                    @Override
+                    protected void onSuccess(List<Data> datas) {
+                        DLog.d(datas);
+                    }
+                });
+
+
+    }
+
+
+
     @Override
     public void showLoadingView() {
 
@@ -115,19 +160,7 @@ public class ResultHelperAct extends AppCompatActivity implements WidgetInterfac
     }
 
 
-    public void voidData(View view) {
-        Retrofit3Client
-                .getInstance()
-                .mApiInterface
-                .dataVoid()
-                .compose(RxResultHelper.<Void>handleResult())
-                .compose(RxSchedulers.<Void>io_main())
-                .subscribe(new LoadingSubscriber<Void>(this) {
-                    @Override
-                    protected void onSuccess(Void aVoid) {
-                        DLog.d(">>>>>>>>");
-                    }
-                });
+    public void defAct(View view) {
+        MainActivity.startMainActivity(this);
     }
-
 }

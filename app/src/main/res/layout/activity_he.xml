@@ -32,4 +32,18 @@
         android:onClick="voidData"
         android:textAllCaps="false"
         android:text="void"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="concatMap"
+        android:textAllCaps="false"
+        android:text="concatMap"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="defAct"
+        android:textAllCaps="false"
+        android:text="defAct"/>
 </LinearLayout>

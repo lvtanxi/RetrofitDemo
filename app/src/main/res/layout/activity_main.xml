@@ -9,29 +9,36 @@
     tools:context="com.lv.test.MainActivity">
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"/>
+        android:text="list"
+        android:textAllCaps="false"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button2"/>
+        android:textAllCaps="false"
+        android:text="list"/>
+
     <Button
         android:id="@+id/button3"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="String"
-        android:layout_height="wrap_content"/>
+        android:textAllCaps="false"/>
+
     <Button
         android:id="@+id/button4"
         android:layout_width="match_parent"
-        android:text="ZIP"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="ZIP"/>
+
     <Button
         android:id="@+id/button5"
         android:layout_width="match_parent"
-        android:text="Array"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Array"/>
 </LinearLayout>

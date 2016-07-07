@@ -1,6 +1,7 @@
 package com.lv.test.custom;
 
 import com.google.gson.TypeAdapter;
+import com.lv.test.DLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +27,7 @@ class CustomResponseConverter<T> implements Converter<ResponseBody, T> {
     @Override
     public T convert(ResponseBody responseBody) throws IOException {
         try {
+            DLog.d(Thread.currentThread().getName());
             String body = responseBody.string();
             JSONObject json = new JSONObject(body);
             int code = json.optInt("code",0);

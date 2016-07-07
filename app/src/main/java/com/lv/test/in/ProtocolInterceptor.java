@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.lv.test.DLog;
 import com.lv.test.MainApplication;
 
 import org.json.JSONException;
@@ -51,7 +52,7 @@ public  class ProtocolInterceptor implements Interceptor {
             e.printStackTrace();
             throw new IOException("数据解析错误,请稍后重试!");
         }
-
+        DLog.d(Thread.currentThread().getName());
         int code = json.optInt("code");
         String message = json.optString("message","");
 

@@ -1,5 +1,7 @@
 package com.lv.test;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +38,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int index = 0;
     private SpannableString spannableString;
     private RelativeSizeSpan mRelativeSizeSpan;
+
+    public static void startMainActivity(Activity activity) {
+        activity.startActivity(new Intent(activity, MainActivity.class));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,9 +166,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         };
     }*/
     private void httpTest() {
-        addSubscription(RetrofitClient.getApiInterface().testUser(), new LoadingSubscriber<List<Data>>(this) {
+        addSubscription(RetrofitClient.getApiInterface().testUser(),
+                new LoadingSubscriber<List<Data>>(this) {
             @Override
             protected void onSuccess(List<Data> datas) {
+                DLog.d(datas);
             }
         });
       /*  OkHttpClient.Builder builder = new OkHttpClient.Builder();
