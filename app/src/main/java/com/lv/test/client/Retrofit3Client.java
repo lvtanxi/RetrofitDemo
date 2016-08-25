@@ -91,7 +91,7 @@ public class Retrofit3Client {
                     return new X509Certificate[]{};
                 }
             }}, new SecureRandom());
-            builder.sslSocketFactory(sc.getSocketFactory());
+            builder.socketFactory(sc.getSocketFactory());
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {
