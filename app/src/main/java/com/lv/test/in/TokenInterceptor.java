@@ -17,8 +17,7 @@ public class TokenInterceptor implements Interceptor {
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .method(originalRequest.method(), originalRequest.body());
-        Request request = requestBuilder.build();
-        return chain.proceed(request);
+        return chain.proceed(requestBuilder.build());
     }
 
 }
