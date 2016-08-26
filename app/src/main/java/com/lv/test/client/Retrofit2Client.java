@@ -65,8 +65,8 @@ public class Retrofit2Client {
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         builder.cookieJar(new JavaNetCookieJar(cookieManager));
 
-        Retrofit  mRetrofit = new Retrofit.Builder()
-                .baseUrl("http://10.13.2.166:8080/TestWeb/")
+        Retrofit mRetrofit = new Retrofit.Builder()
+                .baseUrl("http://10.13.0.48:8080/TestWeb/")
                 .addConverterFactory(StringConverterFactory.create())
                 .addConverterFactory(CustomConverterFactory.create())
                 // .addConverterFactory(GsonConverterFactory.create())
@@ -74,9 +74,10 @@ public class Retrofit2Client {
                 .client(builder.build())
                 .build();
 
-        mApiInterface=mRetrofit.create(ApiInterface.class);
+        mApiInterface = mRetrofit.create(ApiInterface.class);
     }
-    private  void addHttps(OkHttpClient.Builder builder) {
+
+    private void addHttps(OkHttpClient.Builder builder) {
         try {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, new TrustManager[]{new X509TrustManager() {
@@ -93,7 +94,22 @@ public class Retrofit2Client {
                     return new X509Certificate[]{};
                 }
             }}, new SecureRandom());
-            builder.socketFactory(sc.getSocketFactory());
+            builder.sslSocketFactory(sc.getSocketFactory(), new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                }
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            });
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {
@@ -106,6 +122,7 @@ public class Retrofit2Client {
             e.printStackTrace();
         }
     }
+
     private static class SingletonHolder {
         private static final Retrofit2Client INSTANCE = new Retrofit2Client();
     }

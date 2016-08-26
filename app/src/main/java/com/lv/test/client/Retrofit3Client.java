@@ -4,6 +4,7 @@ import com.lv.test.ApiInterface2;
 import com.lv.test.MainApplication;
 import com.lv.test.custom.StringConverterFactory;
 import com.lv.test.in.CacheInterceptor;
+import com.lv.test.in.LoggingInterceptor;
 import com.lv.test.in.QueryParameterInterceptor;
 import com.lv.test.in.TokenInterceptor;
 
@@ -52,7 +53,7 @@ public class Retrofit3Client {
                 .addNetworkInterceptor(new QueryParameterInterceptor())
                 .addNetworkInterceptor(new TokenInterceptor())
                 //.addInterceptor(new ProtocolInterceptor())
-                // .addInterceptor(new LoggingInterceptor())
+                .addInterceptor(new LoggingInterceptor())
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
@@ -64,7 +65,7 @@ public class Retrofit3Client {
         builder.cookieJar(new JavaNetCookieJar(cookieManager));
 
         Retrofit  mRetrofit = new Retrofit.Builder()
-                .baseUrl("http://10.13.2.166:8080/TestWeb/")
+                .baseUrl("http://10.13.0.48:8080/TestWeb/")
                 .addConverterFactory(StringConverterFactory.create())
                 //.addConverterFactory(CustomConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -91,7 +92,22 @@ public class Retrofit3Client {
                     return new X509Certificate[]{};
                 }
             }}, new SecureRandom());
-            builder.socketFactory(sc.getSocketFactory());
+            builder.sslSocketFactory(sc.getSocketFactory(), new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                }
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            });
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {

@@ -67,7 +67,7 @@ public class RetrofitClient {
             builder.cookieJar(new JavaNetCookieJar(cookieManager));
 
             sRetrofit = new Retrofit.Builder()
-                    .baseUrl("http://10.13.2.166:8080/TestWeb/")
+                    .baseUrl("http://10.13.0.48:8080/TestWeb/")
                     .addConverterFactory(StringConverterFactory.create())
                     .addConverterFactory(CustomConverterFactory.create())
                    // .addConverterFactory(GsonConverterFactory.create())
@@ -96,7 +96,22 @@ public class RetrofitClient {
                     return new X509Certificate[]{};
                 }
             }}, new SecureRandom());
-            builder.socketFactory(sc.getSocketFactory());
+            builder.sslSocketFactory(sc.getSocketFactory(), new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                }
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            });
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {

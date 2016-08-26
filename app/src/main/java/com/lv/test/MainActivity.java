@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -13,10 +14,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.lv.test.bean.Data;
 import com.lv.test.bean.TestBean;
 import com.lv.test.client.Retrofit2Client;
+import com.lv.test.client.Retrofit3Client;
 import com.lv.test.client.RetrofitClient;
+import com.lv.test.helper.RxResultHelper;
 import com.lv.test.helper.RxSchedulers;
 import com.lv.test.net.LoadingSubscriber;
 import com.lv.test.net.WidgetInterface;
@@ -194,6 +198,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
+    public void newHeader(View view) {
+        Map<String,String> param=new ArrayMap<>();
+        param.put("k1","v1");
+        param.put("k2","v2");
+        param.put("k3","v3");
+
+       addSubscription( Retrofit3Client.getInstance()
+               .mApiInterface.dataString( new Gson().toJson(param),param)
+               .compose(RxResultHelper.<String>handleResult2())
+               .subscribe(new LoadingSubscriber<String>(this) {
+           @Override
+           public void onNext(String s) {
+               super.onNext(s);
+           }
+       }));
+    }
+
+
     @Override
     public void showLoadingView() {
 
@@ -218,6 +240,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void notifyDialog(@NonNull String message) {
 
     }
+
+
 
     class MyClickableSpan extends ClickableSpan {
 
