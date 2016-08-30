@@ -30,7 +30,7 @@ public interface ApiInterface2 {
     Observable<RestResult<Void>> dataVoid();
 
     @POST("OneData")
-    Observable<RestResult<String>> dataString();
+    Observable<RestResult<String>> dataString(@Body Map<String,String> map);
 
     @POST("OneData")
     Observable<RestResult<String>> dataString(@Header("wode") String authorization, @Body Map<String,String> map) ;

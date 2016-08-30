@@ -3,8 +3,8 @@ package com.lv.test.client;
 import com.lv.test.ApiInterface2;
 import com.lv.test.MainApplication;
 import com.lv.test.custom.StringConverterFactory;
+import com.lv.test.in.BasicParamsInterceptor;
 import com.lv.test.in.CacheInterceptor;
-import com.lv.test.in.LoggingInterceptor;
 import com.lv.test.in.QueryParameterInterceptor;
 import com.lv.test.in.TokenInterceptor;
 
@@ -27,6 +27,7 @@ import javax.net.ssl.X509TrustManager;
 import okhttp3.Cache;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -49,11 +50,14 @@ public class Retrofit3Client {
             File directory = new File(cacheFile, "HttpResponseCache");
             builder.cache(new Cache(directory, HTTP_RESPONSE_DISK_CACHE_MAX_SIZE));
         }
+        HttpLoggingInterceptor loggingInterceptor=new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         builder.addInterceptor(new CacheInterceptor())
                 .addNetworkInterceptor(new QueryParameterInterceptor())
                 .addNetworkInterceptor(new TokenInterceptor())
                 //.addInterceptor(new ProtocolInterceptor())
-                .addInterceptor(new LoggingInterceptor())
+                .addInterceptor(loggingInterceptor)
+                .addInterceptor(new BasicParamsInterceptor())
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)

@@ -30,6 +30,7 @@ import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * User: 吕勇
@@ -69,7 +70,7 @@ public class Retrofit2Client {
                 .baseUrl("http://10.13.0.48:8080/TestWeb/")
                 .addConverterFactory(StringConverterFactory.create())
                 .addConverterFactory(CustomConverterFactory.create())
-                // .addConverterFactory(GsonConverterFactory.create())
+                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(builder.build())
                 .build();

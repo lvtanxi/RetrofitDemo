@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.lv.test.bean.Data;
 import com.lv.test.bean.TestBean;
 import com.lv.test.client.Retrofit2Client;
@@ -203,9 +202,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         param.put("k1","v1");
         param.put("k2","v2");
         param.put("k3","v3");
+        Map<String,String> param2=new ArrayMap<>();
+        param.put("boy1","v1");
+        param.put("boy2","v2");
+        param.put("boy3","v3");
 
        addSubscription( Retrofit3Client.getInstance()
-               .mApiInterface.dataString( new Gson().toJson(param),param)
+               .mApiInterface.dataString(param2)
                .compose(RxResultHelper.<String>handleResult2())
                .subscribe(new LoadingSubscriber<String>(this) {
            @Override
