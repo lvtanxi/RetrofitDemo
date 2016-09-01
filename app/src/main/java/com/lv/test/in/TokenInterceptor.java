@@ -14,7 +14,6 @@ public class TokenInterceptor implements Interceptor {
         Request originalRequest = chain.request();
         Request.Builder requestBuilder = originalRequest.newBuilder()
                 .header("lvtanxi", "lvtanxi")
-                .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .method(originalRequest.method(), originalRequest.body());
         return chain.proceed(requestBuilder.build());
