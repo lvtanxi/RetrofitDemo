@@ -48,4 +48,10 @@
         android:textAllCaps="false"
         android:onClick="newHeader"
         android:text="Header"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:onClick="onUploadFile"
+        android:text="UploadFile"/>
 </LinearLayout>

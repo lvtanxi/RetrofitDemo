@@ -3,10 +3,8 @@ package com.lv.test.client;
 import com.lv.test.ApiInterface2;
 import com.lv.test.MainApplication;
 import com.lv.test.custom.StringConverterFactory;
-import com.lv.test.in.BasicParamsInterceptor;
 import com.lv.test.in.CacheInterceptor;
 import com.lv.test.in.QueryParameterInterceptor;
-import com.lv.test.in.TokenInterceptor;
 
 import java.io.File;
 import java.net.CookieManager;
@@ -54,10 +52,9 @@ public class Retrofit3Client {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         builder.addInterceptor(new CacheInterceptor())
                 .addNetworkInterceptor(new QueryParameterInterceptor())
-                .addNetworkInterceptor(new TokenInterceptor())
+                //.addNetworkInterceptor(new TokenInterceptor())
                 //.addInterceptor(new ProtocolInterceptor())
                 .addInterceptor(loggingInterceptor)
-                .addInterceptor(new BasicParamsInterceptor())
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)

@@ -3,6 +3,7 @@ package com.lv.test;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
@@ -24,10 +25,13 @@ import com.lv.test.helper.RxSchedulers;
 import com.lv.test.net.LoadingSubscriber;
 import com.lv.test.net.WidgetInterface;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -171,11 +175,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void httpTest() {
         addSubscription(RetrofitClient.getApiInterface().testUser(),
                 new LoadingSubscriber<List<Data>>(this) {
-            @Override
-            protected void onSuccess(List<Data> datas) {
-                DLog.d(datas);
-            }
-        });
+                    @Override
+                    protected void onSuccess(List<Data> datas) {
+                        DLog.d(datas);
+                    }
+                });
       /*  OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.interceptors().add(new LoggingInterceptor());
         Request request = new Request.Builder()
@@ -198,24 +202,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void newHeader(View view) {
-        Map<String,String> param=new ArrayMap<>();
-        param.put("k1","v1");
-        param.put("k2","v2");
-        param.put("k3","v3");
-        Map<String,String> param2=new ArrayMap<>();
-        param.put("boy1","v1");
-        param.put("boy2","v2");
-        param.put("boy3","v3");
+        Map<String, String> param = new ArrayMap<>();
+        param.put("k1", "v1");
+        param.put("k2", "v2");
+        param.put("k3", "v3");
+        Map<String, String> param2 = new ArrayMap<>();
+        param.put("boy1", "v1");
+        param.put("boy2", "v2");
+        param.put("boy3", "v3");
 
-       addSubscription( Retrofit3Client.getInstance()
-               .mApiInterface.dataString(param2)
-               .compose(RxResultHelper.<String>handleResult2())
-               .subscribe(new LoadingSubscriber<String>(this) {
-           @Override
-           public void onNext(String s) {
-               super.onNext(s);
-           }
-       }));
+        addSubscription(Retrofit3Client.getInstance()
+                .mApiInterface.dataString(param2)
+                .compose(RxResultHelper.<String>handleResult2())
+                .subscribe(new LoadingSubscriber<String>(this) {
+                    @Override
+                    public void onNext(String s) {
+                        super.onNext(s);
+                    }
+                }));
+    }
+
+    public void onUploadFile(View view) {
+        File file = new File(Environment.getExternalStorageDirectory() + File.separator + "123.jpg");
+        RequestBody requestBody = RequestBody.create(MediaType.parse("enctype=multipart/form-data"), file);
+        Map<String,RequestBody> params =new ArrayMap<>();
+        params.put(1+file.getName(),requestBody);
+        params.put(2+file.getName(),requestBody);
+        params.put(3+file.getName(),requestBody);
+        params.put(4+file.getName(),requestBody);
+        addSubscription(Retrofit3Client.getInstance().mApiInterface.upload(params)
+                .compose(RxResultHelper.<Void>handleResult2())
+                .subscribe(new LoadingSubscriber<Void>(this) {
+                    @Override
+                    protected void onSuccess(Void aVoid) {
+                        Toast.makeText(MainActivity.this, "onSuccess", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        DLog.e(e);
+                        Toast.makeText(MainActivity.this, "onError", Toast.LENGTH_SHORT).show();
+                    }
+                }));
+
     }
 
 
@@ -243,7 +273,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void notifyDialog(@NonNull String message) {
 
     }
-
 
 
     class MyClickableSpan extends ClickableSpan {
