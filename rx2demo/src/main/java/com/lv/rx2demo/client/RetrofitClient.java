@@ -2,11 +2,11 @@ package com.lv.rx2demo.client;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.lv.rx2demo.In.LoggingInterceptor;
-import com.lv.rx2demo.In.ProtocolInterceptor;
 import com.lv.rx2demo.In.QueryParameterInterceptor;
 import com.lv.rx2demo.In.TokenInterceptor;
 import com.lv.rx2demo.MainApplication;
 import com.lv.rx2demo.api.ApiInterface;
+import com.lv.rx2demo.custom.CustomConverterFactory;
 
 import java.io.File;
 import java.net.CookieManager;
@@ -28,7 +28,6 @@ import javax.net.ssl.X509TrustManager;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * User: 吕勇
@@ -67,7 +66,7 @@ public class RetrofitClient {
             }
             builder.addNetworkInterceptor(new QueryParameterInterceptor())
                     .addNetworkInterceptor(new TokenInterceptor())
-                    .addInterceptor(new ProtocolInterceptor())
+                   // .addInterceptor(new ProtocolInterceptor())
                     .addInterceptor(new LoggingInterceptor())
                     .connectTimeout(15, TimeUnit.SECONDS)
                     .readTimeout(20, TimeUnit.SECONDS)
@@ -80,7 +79,7 @@ public class RetrofitClient {
 
             mRetrofit = new Retrofit.Builder()
                     .baseUrl("https://wmapp.wumart.com/wmapp-server/")
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(CustomConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(builder.build())
                     .build();

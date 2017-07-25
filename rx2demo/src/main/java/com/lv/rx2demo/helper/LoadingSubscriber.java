@@ -24,7 +24,7 @@ public class LoadingSubscriber<T> extends DisposableSubscriber<T> {
     }
 
     public LoadingSubscriber(WidgetInterface widgetInterface, boolean showLoadingView, boolean showToast) {
-        mWeakReference = new WeakReference<WidgetInterface>(widgetInterface);
+        mWeakReference = new WeakReference<>(widgetInterface);
         mShowLoadingView = showLoadingView;
         mShowToast = showToast;
     }
