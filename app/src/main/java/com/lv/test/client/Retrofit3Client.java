@@ -4,6 +4,7 @@ import com.lv.test.ApiInterface2;
 import com.lv.test.MainApplication;
 import com.lv.test.custom.StringConverterFactory;
 import com.lv.test.in.CacheInterceptor;
+import com.lv.test.in.ProtocolInterceptor;
 import com.lv.test.in.QueryParameterInterceptor;
 import com.lv.test.in.TokenInterceptor;
 
@@ -54,7 +55,7 @@ public class Retrofit3Client {
         builder.addInterceptor(new CacheInterceptor())
                 .addNetworkInterceptor(new QueryParameterInterceptor())
                 .addNetworkInterceptor(new TokenInterceptor())
-                //.addInterceptor(new ProtocolInterceptor())
+                .addInterceptor(new ProtocolInterceptor())
                 .addInterceptor(loggingInterceptor)
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
