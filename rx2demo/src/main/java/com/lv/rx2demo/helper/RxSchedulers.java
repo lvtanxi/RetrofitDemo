@@ -13,7 +13,7 @@ public class RxSchedulers {
     public static <T> FlowableTransformer<T, T> io_main() {
         return new FlowableTransformer<T, T>() {
             @Override
-            public Publisher<? extends T> apply(Flowable<T> tFlowable) throws Exception {
+            public Publisher<T> apply(Flowable<T> tFlowable) {
                 return tFlowable.subscribeOn(Schedulers.io())
                         .unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
             }

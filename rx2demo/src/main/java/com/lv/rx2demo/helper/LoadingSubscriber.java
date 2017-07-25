@@ -6,11 +6,10 @@ import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 
-public class LoadingSubscriber<T> implements Observer<T> {
+public class LoadingSubscriber<T> extends DisposableSubscriber<T> {
 
     private WeakReference<WidgetInterface> mWeakReference;
     private boolean mShowLoadingView;
@@ -65,10 +64,12 @@ public class LoadingSubscriber<T> implements Observer<T> {
         return alertMessage;
     }
 
+
     @Override
-    public void onSubscribe(Disposable d) {
+    protected void onStart() {
+        super.onStart();
         if (!isNull()) {
-            mWeakReference.get().addDisposable(d);
+            mWeakReference.get().addDisposable(this);
             if (mShowLoadingView)
                 mWeakReference.get().showLoadingView();
         }

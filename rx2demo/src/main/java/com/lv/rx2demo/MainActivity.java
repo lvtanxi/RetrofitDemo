@@ -10,15 +10,12 @@ import com.lv.rx2demo.client.RetrofitClient;
 import com.lv.rx2demo.helper.LoadingSubscriber;
 import com.lv.rx2demo.helper.RxSchedulers;
 import com.lv.rx2demo.helper.WidgetInterface;
-import com.lv.rx2demo.model.TestBean;
-
-import org.reactivestreams.Subscriber;
+import com.lv.rx2demo.model.UpdateBean;
 
 import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 public class MainActivity extends AppCompatActivity implements WidgetInterface {
     private CompositeDisposable mCompositeDisposable;
@@ -32,17 +29,24 @@ public class MainActivity extends AppCompatActivity implements WidgetInterface {
     }
 
     public void onData(View view) {
-        RetrofitClient.getInstance()
+        /*RetrofitClient.getInstance()
                 .getApiInterface()
-                .dataOne2()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new LoadingSubscriber<TestBean>(this){
+                .dataVoid()
+                .compose(RxSchedulers.<UpdateBean>io_main())
+                .subscribe(new LoadingSubscriber<UpdateBean>(this) {
                     @Override
-                    protected void onSuccess(TestBean testBean) {
-                        DLog.d(testBean);
+                    protected void onSuccess(UpdateBean updateBean) {
+                        DLog.d(updateBean);
                     }
-                });
+                });*/
+        addSubscription(RetrofitClient.getInstance()
+                .getApiInterface()
+                .dataVoid(), new LoadingSubscriber<UpdateBean>(this) {
+            @Override
+            protected void onSuccess(UpdateBean updateBean) {
+                DLog.d(updateBean);
+            }
+        });
     }
 
     @Override
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements WidgetInterface {
     }
 
     @Override
-    public void showFailToast( String message) {
+    public void showFailToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
@@ -70,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements WidgetInterface {
     }
 
 
-    protected <T> void addSubscription(Flowable<T> flowable, Subscriber<T> subscriber) {
+    protected <T> void addSubscription(Flowable<T> flowable, DisposableSubscriber<T> subscriber) {
         flowable.compose(RxSchedulers.<T>io_main())
                 .subscribe(subscriber);
     }

@@ -1,15 +1,9 @@
 package com.lv.rx2demo.api;
 
 
-import com.lv.rx2demo.model.Data;
-import com.lv.rx2demo.model.TestBean;
+import com.lv.rx2demo.model.UpdateBean;
 
-import java.util.List;
-import java.util.Map;
-
-import io.reactivex.Observable;
-import retrofit2.http.Body;
-import retrofit2.http.Header;
+import io.reactivex.Flowable;
 import retrofit2.http.POST;
 
 /**
@@ -20,21 +14,9 @@ import retrofit2.http.POST;
  */
 public interface ApiInterface {
 
-    @POST("OneData")
-    Observable<Data> dataOne();
+    @POST("app/getNewest")
+    Flowable<UpdateBean> dataVoid();
 
-    @POST("OneData")
-    Observable<TestBean> dataOne2();
-
-
-    @POST("OneData")
-    Observable<Void> dataVoid();
-
-    @POST("OneData")
-    Observable<List<Data>> dataString();
-
-    @POST("OneData")
-    Observable<String> dataString(@Header("wode") String authorization, @Body Map<String, String> map) ;
 
 
 }
