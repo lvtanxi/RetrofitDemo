@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.lv.test.bean.Data;
 import com.lv.test.client.Retrofit3Client;
+import com.lv.test.client.RetrofitClient;
 import com.lv.test.helper.RestResult;
 import com.lv.test.helper.RxResultHelper;
 import com.lv.test.helper.RxSchedulers;
@@ -162,5 +163,19 @@ public class ResultHelperAct extends AppCompatActivity implements WidgetInterfac
 
     public void defAct(View view) {
         MainActivity.startMainActivity(this);
+    }
+
+    public void defString(View view) {
+        RetrofitClient
+                .getApiInterface()
+                .test()
+                .compose(RxSchedulers.<String>io_main())
+                .subscribe(new LoadingSubscriber<String>(this) {
+                    @Override
+                    protected void onSuccess(String s) {
+                        DLog.d(s);
+                    }
+                });
+
     }
 }

@@ -17,6 +17,7 @@ public interface ApiInterface {
     @POST("app/getNewest")
     Flowable<UpdateBean> dataVoid();
 
-
+    @POST("app/getNewest")
+    Flowable<String> dataString();
 
 }

@@ -46,4 +46,10 @@
         android:onClick="defAct"
         android:textAllCaps="false"
         android:text="defAct"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="defString"
+        android:textAllCaps="false"
+        android:text="String"/>
 </LinearLayout>

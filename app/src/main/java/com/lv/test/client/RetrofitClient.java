@@ -67,7 +67,7 @@ public class RetrofitClient {
             builder.cookieJar(new JavaNetCookieJar(cookieManager));
 
             sRetrofit = new Retrofit.Builder()
-                    .baseUrl("http://10.13.0.48:8080/TestWeb/")
+                    .baseUrl("http://10.12.194.171:8080/")
                     .addConverterFactory(StringConverterFactory.create())
                     .addConverterFactory(CustomConverterFactory.create())
                    // .addConverterFactory(GsonConverterFactory.create())

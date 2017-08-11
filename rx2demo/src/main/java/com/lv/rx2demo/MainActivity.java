@@ -12,9 +12,12 @@ import com.lv.rx2demo.helper.RxSchedulers;
 import com.lv.rx2demo.helper.WidgetInterface;
 import com.lv.rx2demo.model.UpdateBean;
 
+import org.reactivestreams.Publisher;
+
 import io.reactivex.Flowable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 public class MainActivity extends AppCompatActivity implements WidgetInterface {
@@ -29,24 +32,32 @@ public class MainActivity extends AppCompatActivity implements WidgetInterface {
     }
 
     public void onData(View view) {
-        /*RetrofitClient.getInstance()
+        RetrofitClient.getInstance()
                 .getApiInterface()
                 .dataVoid()
-                .compose(RxSchedulers.<UpdateBean>io_main())
-                .subscribe(new LoadingSubscriber<UpdateBean>(this) {
+                .concatMap(new Function<UpdateBean, Publisher<String>>() {
                     @Override
-                    protected void onSuccess(UpdateBean updateBean) {
+                    public Publisher<String> apply(UpdateBean updateBean) throws Exception {
+                        return RetrofitClient.getInstance()
+                                .getApiInterface()
+                                .dataString();
+                    }
+                })
+                .compose(RxSchedulers.<String>io_main())
+                .subscribe(new LoadingSubscriber<String>(this) {
+                    @Override
+                    protected void onSuccess(String updateBean) {
                         DLog.d(updateBean);
                     }
-                });*/
-        addSubscription(RetrofitClient.getInstance()
+                });
+  /*      addSubscription(RetrofitClient.getInstance()
                 .getApiInterface()
                 .dataVoid(), new LoadingSubscriber<UpdateBean>(this) {
             @Override
             protected void onSuccess(UpdateBean updateBean) {
                 DLog.d(updateBean);
             }
-        });
+        });*/
     }
 
     @Override

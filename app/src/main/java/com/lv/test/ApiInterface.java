@@ -28,9 +28,12 @@ public interface ApiInterface {
     @GET("Xx")
     Call<TestBean> testUser2();
 
-
-
     @POST("Xx")
+    Observable<String> test();
+
+
+
+    @POST("test")
     Observable<TestBean> testUserXX(@Body String TEX);
 
     @POST("Xx")
